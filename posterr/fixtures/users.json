@@ -1,0 +1,56 @@
+[
+  {
+    "model": "posterr.user",
+    "pk": 4,
+    "fields": {
+      "name": "Pedrinho",
+      "username": "pedrinho",
+      "creation_date": "2022-03-07"
+    }
+  },
+  {
+    "model": "posterr.user",
+    "pk": 5,
+    "fields": {
+      "name": "Carlinhos",
+      "username": "carlinhos",
+      "creation_date": "2022-03-07"
+    }
+  },
+  {
+    "model": "posterr.user",
+    "pk": 6,
+    "fields": {
+      "name": "Marquinhos",
+      "username": "marquinhos",
+      "creation_date": "2022-03-07"
+    }
+  },
+  {
+    "model": "posterr.user",
+    "pk": 7,
+    "fields": {
+      "name": "Carolzinha",
+      "username": "carolzinha",
+      "creation_date": "2022-03-07"
+    }
+  },
+  {
+    "model": "posterr.user",
+    "pk": 8,
+    "fields": {
+      "name": "Ritinha",
+      "username": "ritinha",
+      "creation_date": "2022-03-07"
+    }
+  },
+  {
+    "model": "posterr.user",
+    "pk": 9,
+    "fields": {
+      "name": "Aninha",
+      "username": "aninha",
+      "creation_date": "2022-03-07"
+    }
+  }
+]
