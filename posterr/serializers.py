@@ -9,22 +9,23 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
   poster = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+  
   class Meta:
     model = Post
     fields = ['content','poster','date']
 
-class RepostSerializer(serializers.ModelSerializer):
-  # reposter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
-  # Another possibility
-  # post_content = serializers.CharField(source='get_post_content', read_only=True)
+class RepostSerializer(serializers.ModelSerializer): 
+  reposter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+  author = serializers.CharField(source='get_post_author', read_only=True)
   post = serializers.SlugRelatedField(slug_field='content', read_only=True)
   class Meta:
     model = Repost
-    fields = ['reposter','date', 'post']
+    fields = ['reposter', 'author', 'date', 'post']
 
 class QuoteSerializer(serializers.ModelSerializer):
   quoter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+  author = serializers.CharField(source='get_post_author', read_only=True)
   post = serializers.SlugRelatedField(slug_field='content', read_only=True)
   class Meta:
     model = Quote
-    fields = ['quote', 'post', 'quoter','date']
+    fields = ['quoter', 'quote', 'post', 'author', 'date']

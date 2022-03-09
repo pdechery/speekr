@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posterr - Home</title>
+</head>
+<body>
+<div id="app">
+    <h1>Posterr</h1>
+    <div v-for="post in posts">
+        <p>[[ post.content ]]</p>
+        <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
+        <hr>
+    </div>
+    <div v-for="repost in reposts">
+        <p>[[ repost.reposter ]] reposted:</p>
+        <p>[[ repost.post ]]</p>
+        <p>Original poster: [[ repost.author ]] at: [[ repost.date ]]</p>
+        <hr>
+    </div>
+    <div v-for="quote in quotes">
+        <p>[[ quote.quoter ]] quoted:</p>
+        <p>[[ quote.quote ]]</p>
+        <p style="border: 1px solid #ccc;">[[ quote.post ]]</p>
+        <p>Original poster: [[ quote.author ]] at: [[ quote.date ]]</p>
+        <hr>
+    </div>
+    <p>&nbsp;</p>
+    <div id="create_post">
+        <h2>Create Post</h2>
+        <form action="http://127.0.0.1:8000/api/posts/" method="post">
+            <input type="hidden" name="poster" value="1">
+            <textarea name="content" cols="30" rows="10" placeholder="Create your post here"></textarea>
+            <div>
+                <input type="submit" name="Post">
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+    Vue.createApp({
+        data() {
+          return {
+            posts: [],
+            reposts: [],
+            quotes: []
+          }
+        },
+        delimiters: ["[[", "]]"],
+        mounted() {
+            fetch('http://127.0.0.1:8000/api/',{})
+            .then(response => response.json())
+            .then(data => {
+                this.posts = data.posts
+                this.reposts = data.reposts
+                this.quotes = data.quotes
+            })
+        }
+      }).mount('#app')
+</script>
+</body>
+</html>

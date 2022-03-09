@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posterr - Profile</title>
+</head>
+<body>
+<div id="app">
+    <h1>Posterr</h1>
+    <h2>[[ user.name ]] profile</h2>
+    <h4><a href="#">Follow ou Unfollow, vamos fazer um post via formulario ou get sei la</a></h4>
+    <h4>Following: [[ user.followers ]]</h4>
+    <h4>Followers: [[ user.following ]]</h4>
+    <div v-for="post in posts">
+        [[ post.content ]]
+    </div>
+    <div>
+        <h3>Formulario para criar post</h3>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+    
+    let userId = window.location.pathname;
+    userId = userId.charAt(userId.length-1)
+
+    Vue.createApp({
+        data() {
+          return {
+            user: {
+                name:'',
+                followers: '',
+                following: ''
+            },
+            posts: '',
+          }
+        },
+        delimiters: ["[[", "]]"],
+        mounted() {
+            fetch(`http://127.0.0.1:8000/api/profile/${userId}`,{})
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                this.user.name = data.user.name;
+                this.user.followers = data.followers;
+                this.user.following = data.following;
+                this.posts = data.posts;
+            })
+        }
+      }).mount('#app')
+</script>
+</body>
+</html>

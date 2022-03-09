@@ -19,15 +19,21 @@ class Post(models.Model):
   content = models.CharField(max_length=777)
   date = models.DateField(auto_now_add=True)
 
+  class Meta:
+    ordering = ('-date',)
+
 
 class Repost(models.Model):
   post = models.ForeignKey(Post, related_name='reposts', on_delete=models.CASCADE)
   reposter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   date = models.DateField(auto_now_add=True)
 
-  def get_post_content(self):
-    post = self.post.content
-    return post
+  class Meta:
+    ordering = ('-date',)
+
+  def get_post_author(self):
+    poster = self.post.poster
+    return poster
 
 
 class Quote(models.Model):
@@ -35,4 +41,11 @@ class Quote(models.Model):
   quote = models.CharField(max_length=200)
   quoter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   date = models.DateField(auto_now_add=True)
+
+  class Meta:
+    ordering = ('-date',)
+
+  def get_post_author(self):
+    poster = self.post.poster
+    return poster
 
