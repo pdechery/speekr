@@ -5,11 +5,14 @@
     <title>Posterr - Home</title>
 </head>
 <body>
-<div id="app">
+<div id="app" style="width: 70%;">
     <h1>Posterr</h1>
+    <p><a href="/">(Show everything)</a> | <a href="#" @click.prevent="filter">(Show only my content)</a></p>
+    <h2>Posts</h2>
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
         <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
+        <p><a href="#" @click.prevent="repost({{ post.id }})">Repost</a> | <a href="#">Quote</a></p>
         <hr>
     </div>
     <div v-for="repost in reposts">
@@ -21,18 +24,20 @@
     <div v-for="quote in quotes">
         <p>[[ quote.quoter ]] quoted:</p>
         <p>[[ quote.quote ]]</p>
-        <p style="border: 1px solid #ccc;">[[ quote.post ]]</p>
+        <blockquote>[[ quote.post ]]</blockquote>
         <p>Original poster: [[ quote.author ]] at: [[ quote.date ]]</p>
         <hr>
     </div>
-    <p>&nbsp;</p>
     <div id="create_post">
         <h2>Create Post</h2>
-        <form action="http://127.0.0.1:8000/api/posts/" method="post">
+        <div id="validation">
+            <p>[[ validation ]]</p>
+        </div>
+        <form method="post" @submit.prevent="createPost($event)" enctype="multipart/form-data">
             <input type="hidden" name="poster" value="1">
-            <textarea name="content" cols="30" rows="10" placeholder="Create your post here"></textarea>
+            <textarea name="content" cols="30" rows="10" placeholder="Create your post here" v-model.lazy="post_content"></textarea>
             <div>
-                <input type="submit" name="Post">
+                <input type="submit" value="Post">
             </div>
         </form>
     </div>
@@ -42,20 +47,70 @@
     Vue.createApp({
         data() {
           return {
+            validation: '',
+            post_content: '',
             posts: [],
             reposts: [],
             quotes: []
           }
         },
         delimiters: ["[[", "]]"],
+        methods: {
+            createPost(event) {
+                
+                if(!this.post_content) {
+                    this.validation = "There must be content to be posted!";
+                    return false;
+                }
+
+                // @todo add other validation rules
+
+                let data = new FormData();
+
+                data.append('content', this.post_content);
+                data.append('poster',event.srcElement[0]._value);
+
+                fetch('http://127.0.0.1:8000/api/posts/',{
+                    method:'POST',
+                    body: data
+                }).then(response => {
+                    console.log(response)
+                }).then(data => {});
+
+                return false;
+            },
+            repost(id){
+                console.log('estou aqui');
+                console.log(id);
+            },
+            quote(){
+
+            },
+            filter(){
+                
+                let data = new FormData();
+                data.append('user', 4); // arbitrary user
+                
+                fetch('http://127.0.0.1:8000/api/home/',{
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.posts = data.posts
+                    this.reposts = data.reposts
+                    this.quotes = data.quotes
+                })           
+            }
+        },
         mounted() {
-            fetch('http://127.0.0.1:8000/api/',{})
-            .then(response => response.json())
-            .then(data => {
-                this.posts = data.posts
-                this.reposts = data.reposts
-                this.quotes = data.quotes
-            })
+            fetch('http://127.0.0.1:8000/api/home/',{})
+                .then(response => response.json())
+                .then(data => {
+                    this.posts = data.posts
+                    this.reposts = data.reposts
+                    this.quotes = data.quotes
+                })
         }
       }).mount('#app')
 </script>

@@ -17,17 +17,29 @@ def Profile(request, user):
 
 # API
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def home(request):
 
+  pk = None
+  
+  if request.method == 'POST':
+    pk = request.data['user']
+
   try:
+
     posts = Post.objects.all()
+    if pk:
+      posts = Post.objects.filter(poster=pk)
     post_serializer = PostSerializer(posts, many=True)
 
     reposts = Repost.objects.all()
+    if pk:
+      reposts = Repost.objects.filter(reposter=pk)
     repost_serializer = RepostSerializer(reposts, many=True)
 
     quotes = Quote.objects.all()
+    if pk:
+      quotes = Quote.objects.filter(quoter=pk)
     quote_serializer = QuoteSerializer(quotes, many=True)
 
     return Response({

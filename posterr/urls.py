@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import *
 
 rest_api = [
-    path('', home),
+    path('home/', home),
     path('profile/<int:user>', profile),
     path('users/', UserList.as_view(), name="user-list"),
     path('user/<int:user>/follow/<int:friend>', follow),
