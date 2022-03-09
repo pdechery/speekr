@@ -1,10 +1,12 @@
 from django.urls import path
-from posterr import views
+from .views import *
 
 urlpatterns = [
-    path('', views.home),
-    path('profile/<int:user>', views.profile),
-    path('users/', views.UserList.as_view(), name="user-list"),
-    path('user/<int:pk>', views.UserDetail.as_view(), name="user-detail"),
-    path('posts/', views.PostList.as_view()),
+    path('', home),
+    path('profile/<int:user>', profile),
+    path('users/', UserList.as_view(), name="user-list"),
+    path('user/<int:user>/follow/<int:friend>', follow),
+    path('user/<int:user>/unfollow/<int:friend>', unfollow),
+    path('user/<int:pk>', UserDetail.as_view(), name="user-detail"),
+    path('posts/', PostListCreate.as_view()),
 ]

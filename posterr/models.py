@@ -4,7 +4,7 @@ from django.conf import settings
 
 class User(AbstractUser):
   name = models.CharField(max_length=14, unique=True)
-  friends = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+  friends = models.ManyToManyField("self", symmetrical=False, related_name='related_to', blank=True)
   creation_date = models.DateField(auto_now_add=True)
 
   def save(self, *args, **kwargs):
@@ -19,6 +19,7 @@ class Post(models.Model):
   content = models.CharField(max_length=777)
   date = models.DateField(auto_now_add=True)
 
+
 class Repost(models.Model):
   post = models.ForeignKey(Post, related_name='reposts', on_delete=models.CASCADE)
   reposter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -27,6 +28,7 @@ class Repost(models.Model):
   def get_post_content(self):
     post = self.post.content
     return post
+
 
 class Quote(models.Model):
   post = models.ForeignKey(Post, related_name='quotes', on_delete=models.CASCADE)
