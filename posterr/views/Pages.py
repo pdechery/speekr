@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from posterr.models import User, Post, Repost, Quote
 from posterr.serializers import UserSerializer, PostSerializer, RepostSerializer, QuoteSerializer
 
-# HTML
+# HTML templates
 
 def HomePage(request):
   return render(request, 'home.html')
@@ -19,6 +19,9 @@ def Profile(request, user):
 
 @api_view(['GET','POST'])
 def home(request):
+  '''
+  Homepage data with filtering by user
+  '''
 
   pk = None
   

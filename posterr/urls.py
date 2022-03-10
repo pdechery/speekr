@@ -8,7 +8,9 @@ rest_api = [
     path('user/<int:user>/follow/<int:friend>', follow),
     path('user/<int:user>/unfollow/<int:friend>', unfollow),
     path('user/<int:pk>', UserDetail.as_view(), name="user-detail"),
-    path('posts/', PostListCreate.as_view()),
+    path('posts/', PostCreate.as_view()),
+    path('repost/', RepostCreate.as_view()),
+    path('quote/', QuoteCreate.as_view()),
 ]
 
 urlpatterns = [

@@ -8,6 +8,9 @@ class User(AbstractUser):
   creation_date = models.DateTimeField(auto_now_add=True)
 
   def save(self, *args, **kwargs):
+    '''
+      Create automatic username when saving User instance 
+    '''
     if not self.username:
       import random
       self.username = 'poster_'+str(random.randint(10,100))
@@ -33,7 +36,6 @@ class Repost(models.Model):
 
   class Meta:
     ordering = ('-date',)
-
 
   def get_post_author(self):
     poster = self.post.poster

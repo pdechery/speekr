@@ -4,14 +4,11 @@ from rest_framework.views import APIView
 from posterr.models import User, Post
 from posterr.serializers import PostSerializer
 
-class PostListCreate(APIView):
+
+class PostCreate(APIView):
   '''
-    List and create Posts
+    Create Posts
   '''
-  def get(self, request):
-    posts = Post.objects.all()
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
 
   def post(self, request):
     try:

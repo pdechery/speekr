@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +14,12 @@
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
         <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
-        <p><a href="#" @click.prevent="repost({{ post.id }})">Repost</a> | <a href="#">Quote</a></p>
+        <div style="display: flex;">
+            <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
+            <div class="quote-form">
+                <textarea :name="['name-'+post.id]" cols="20" rows="3" placeholder="or Quote this post (press tab after typing to sumit)" @change.self="quote($event)"></textarea>
+            </div>
+        </div>
         <hr>
     </div>
     <div v-for="repost in reposts">
@@ -42,7 +49,8 @@
         </form>
     </div>
 </div>
-<script src="https://unpkg.com/vue@3"></script>
+<!-- <script src="https://unpkg.com/vue@3"></script> -->
+<script src="{% static 'js/vue.global.js' %}"></script>
 <script>
     Vue.createApp({
         data() {
@@ -68,30 +76,73 @@
                 let data = new FormData();
 
                 data.append('content', this.post_content);
-                data.append('poster',event.srcElement[0]._value);
+                data.append('poster', event.srcElement[0]._value);
 
-                fetch('http://127.0.0.1:8000/api/posts/',{
+                fetch('/api/posts/',{
                     method:'POST',
                     body: data
-                }).then(response => {
-                    console.log(response)
-                }).then(data => {});
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.posts.unshift({
+                        'content': data.content,
+                        'poster': data.poster,
+                        'date': data.date
+                    })
+                })
 
                 return false;
             },
             repost(id){
-                console.log('estou aqui');
-                console.log(id);
-            },
-            quote(){
 
+                let data = new FormData();
+                data.append('post', id);
+                data.append('reposter', 4); // arbitrary user
+
+                fetch('/api/repost/', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.reposts.unshift({
+                        'reposter': data.reposter,
+                        'author': data.author,
+                        'date': data.date,
+                        'post': data.post
+                    })
+                })
+            },
+            quote(event){
+
+                const post = event.target.getAttribute('name').substring(5);
+                const quote = event.target.value;
+
+                let data = new FormData();
+                data.append('post', post);
+                data.append('quote', quote);
+                data.append('quoter', 4); // arbitrary user
+
+                fetch('/api/quote/', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.quotes.unshift({
+                        'quoter': data.quoter,
+                        'quote': data.quote,
+                        'date': data.date,
+                        'post': data.post
+                    })
+                })
             },
             filter(){
                 
                 let data = new FormData();
                 data.append('user', 4); // arbitrary user
                 
-                fetch('http://127.0.0.1:8000/api/home/',{
+                fetch('/api/home/',{
                     method: 'POST',
                     body: data
                 })
@@ -104,7 +155,7 @@
             }
         },
         mounted() {
-            fetch('http://127.0.0.1:8000/api/home/',{})
+            fetch('/api/home/',{})
                 .then(response => response.json())
                 .then(data => {
                     this.posts = data.posts
