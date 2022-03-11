@@ -15,6 +15,9 @@ Inside app's directory, create a virtual environment using venv.
 Run the virtual environment
 `source venv/bin/activate`
 
+Install packages
+`pip install -r requirements.txt`
+
 Run the app
 `python manage.py runserver`
 
