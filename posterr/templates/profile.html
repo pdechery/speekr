@@ -11,22 +11,26 @@
     <h1>Posterr</h1>
     
     <div style="display: flex; align-items: center;">
-        <p style="margin: 0 1em 0 0;"><strong>[[ user.name ]]'s ([[ user.username ]]) profile</strong></p>
-        <div v-if="user.following">
-            <button @click="unfollow">Unfollow</button>
-        </div>
-        <div v-else>
-            <button @click="follow">follow</button>
+        <p style="margin: 0 1em 0 0;"><strong>[[ profile.name ]]'s ([[ profile.username ]]) profile</strong></p>
+        <div v-if="">
+            <div v-if="show_follow_button">
+                <div v-if="auth_user_follows">
+                    <button @click="doFollow(false)">Unfollow</button>
+                </div>
+                <div v-else>
+                    <button @click="doFollow(true)">follow</button>
+                </div>
+            </div>
         </div>
     </div>
     
-    <p>Following: [[ user.followers ]] | Followers: [[ user.following ]]</p>
+    <p>Following: [[ profile.followers ]] | Followers: [[ profile.following ]]</p>
     
     <h2>Posts</h2>
     
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
-        <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
+        <p>From: [[ post.poster ]] at: [[ formatDate(post.date) ]]</p>
         <div style="display: flex;">
             <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
             <div class="quote-form">
@@ -38,14 +42,14 @@
     <div v-for="repost in reposts">
         <p>[[ repost.reposter ]] reposted:</p>
         <p>[[ repost.post ]]</p>
-        <p>Original poster: [[ repost.author ]] at: [[ repost.date ]]</p>
+        <p>Original poster: [[ repost.author ]] at: [[ formatDate(repost.date) ]]</p>
         <hr>
     </div>
     <div v-for="quote in quotes">
         <p>[[ quote.quoter ]] quoted:</p>
         <p>[[ quote.quote ]]</p>
         <blockquote>[[ quote.post ]]</blockquote>
-        <p>Original poster: [[ quote.author ]] at: [[ quote.date ]]</p>
+        <p>Original poster: [[ quote.author ]] at: [[ formatDate(quote.date) ]]</p>
         <hr>
     </div>
     <div id="create_post">
@@ -64,21 +68,18 @@
 </div>
 <script src="{% static 'js/vue.global.js' %}"></script>
 <script>
-    
-    // profile owner. I'm getting his/her id by the page URL
-    let profile_user = window.location.pathname;
-    profile_user = profile_user.charAt(profile_user.length-1);
-
-    // arbitrary logged in user
-    const auth_user = 5;
 
     Vue.createApp({
         data() {
           return {
-            user: {
+            profile_user: '',
+            auth_user: 1,
+            show_follow_button: true,
+            auth_user_follows: false,
+            profile: {
                 name:'',
                 followers: '',
-                following: false
+                following: ''
             },
             posts: [],
             reposts: [],
@@ -87,28 +88,148 @@
         },
         delimiters: ["[[", "]]"],
         methods: {
-            isFollower() {
-                // make query to check if auth_user follows profile_user
+            createPost(event) {
+                
+                if(!this.post_content) {
+                    this.validation = "There must be content to be posted!";
+                    return false;
+                }
+
+                // @todo add other validation rules
+
+                let data = new FormData();
+
+                data.append('content', this.post_content);
+                data.append('poster', event.target[0].value);
+
+                fetch('/api/posts/',{
+                    method:'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.posts.unshift({
+                        'content': data.content,
+                        'poster': data.poster,
+                        'date': data.date,
+                        'id': data.id
+                    })
+                })
+
+                return false;
             },
-            follow() {
-                // create follow relationship between auth_user and profile_user
+            repost(id){
+
+                let data = new FormData();
+                data.append('post', id);
+                data.append('reposter', this.auth_user);
+
+                fetch('/api/repost/', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.reposts.unshift({
+                        'reposter': data.reposter,
+                        'author': data.author,
+                        'date': data.date,
+                        'post': data.post
+                    })
+                })
             },
-            unfollow() {
-                // remove relationship between auth_user and profile_user
+            quote(event){
+
+                const post = event.target.getAttribute('name').substring(5);
+                const quote = event.target.value;
+
+                let data = new FormData();
+                data.append('post', post);
+                data.append('quote', quote);
+                data.append('quoter', this.auth_user);
+
+                fetch('/api/quote/', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.quotes.unshift({
+                        'quoter': data.quoter,
+                        'quote': data.quote,
+                        'date': data.date,
+                        'post': data.post,
+                        'author': data.author,
+                    })
+                })
+            },
+            checkFollow() {
+                
+                /**
+                 * Check if auth_user follows profile_user
+                 */
+                
+                fetch(`/api/user/${this.auth_user}/follow/${this.profile_user}`)
+                .then(response => {
+                    if(response.status == 400) {
+                        this.show_follow_button = false;
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    if(data.status) this.auth_user_follows = true;
+                    return false
+                })
+            },
+            doFollow(status) {
+
+                /**
+                 * Create or delete relation
+                 */
+
+                fetch('/api/do-follow',{
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'user1':this.auth_user,
+                        'user2':this.profile_user,
+                        'status':status
+                    })
+                })
+                .then(response => {
+                    this.auth_user_follows = !this.auth_user_follows;
+                })
+            },
+            formatDate(date) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                let fdate = new Date(date);
+                return fdate.toLocaleDateString('en',options);
             }
         },
         mounted() {
-            fetch(`/api/profile/${userId}`,{})
-            .then(response => response.json())
-            .then(data => {
-                this.user.name = data.user.name;
-                this.user.username = data.user.username;
-                this.user.followers = data.followers;
-                this.user.following = data.following;
-                this.posts = data.posts;
-                this.reposts = data.reposts
-                this.quotes = data.quotes
-            })
+
+            // profile owner. I'm getting his/her id by the page URL
+            const profile_user = window.location.pathname;
+            this.profile_user = profile_user.charAt(profile_user.length-1);
+
+            fetch(`/api/profile/${this.profile_user}`,{})
+                .then(response => response.json())
+                .then(data => {
+                    
+                    this.profile.name = data.user.name;
+                    this.profile.username = data.user.username;
+                    this.profile.followers = data.followers;
+                    this.profile.following = data.following;
+                    this.posts = data.posts;
+                    this.reposts = data.reposts;
+                    this.quotes = data.quotes;
+                    
+                    this.checkFollow(this.auth_user, this.profile_user);
+
+                })
+
         }
       }).mount('#posterr')
 </script>

@@ -4,11 +4,11 @@ from posterr.models import User, Post, Repost, Quote
 # User
 
 class UserSerializer(serializers.ModelSerializer):
-  friends = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name', many=True)
+  follows = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name', many=True)
   
   class Meta:
     model = User
-    fields = ['name','friends','username']
+    fields = ['name','follows','username']
 
 
 # Post

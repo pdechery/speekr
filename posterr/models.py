@@ -4,7 +4,7 @@ from django.conf import settings
 
 class User(AbstractUser):
   name = models.CharField(max_length=14, unique=True)
-  friends = models.ManyToManyField("self", symmetrical=False, related_name='related_to', blank=True)
+  follows = models.ManyToManyField("self", symmetrical=False, related_name='following', blank=True)
   creation_date = models.DateTimeField(auto_now_add=True)
 
   def save(self, *args, **kwargs):

@@ -23,26 +23,28 @@ def home(request):
   Homepage data with filtering by user
   '''
 
-  pk = None
-  
-  if request.method == 'POST':
-    pk = request.data['user']
-
   try:
 
+    pk = follow_list = None
+    
+    if request.method == 'POST':
+      pk = request.data['user']
+      user = User.objects.get(pk=pk)
+      follow_list = [user.id for user in user.follows.all()]
+
     posts = Post.objects.all()
-    if pk:
-      posts = Post.objects.filter(poster=pk)
+    if follow_list:
+      posts = Post.objects.filter(poster__in=follow_list)
     post_serializer = PostSerializer(posts, many=True)
 
     reposts = Repost.objects.all()
-    if pk:
-      reposts = Repost.objects.filter(reposter=pk)
+    if follow_list:
+      reposts = Repost.objects.filter(reposter__in=follow_list)
     repost_serializer = RepostSerializer(reposts, many=True)
 
     quotes = Quote.objects.all()
-    if pk:
-      quotes = Quote.objects.filter(quoter=pk)
+    if follow_list:
+      quotes = Quote.objects.filter(quoter__in=follow_list)
     quote_serializer = QuoteSerializer(quotes, many=True)
 
     return Response({
@@ -76,9 +78,9 @@ def profile(request, user):
     quotes = Quote.objects.filter(quoter=user)
     quote_serializer = QuoteSerializer(quotes, many=True)
 
-    following = user.friends.count() # qtos adicionei
-    #followers = User.objects.filter(related_to=user).count()
-    followers = user.related_to.count() # qtos me adicionaram
+    following = user.follows.count() 
+    #followers = User.objects.filter(following=me)
+    followers = user.following.count() 
 
     return Response({
       "user": user_serializer.data,

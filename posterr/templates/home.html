@@ -13,7 +13,7 @@
     <h2>Posts</h2>
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
-        <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
+        <p>From: [[ post.poster ]] at: [[ formatDate(post.date ]]</p>
         <div style="display: flex;">
             <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
             <div class="quote-form">
@@ -25,14 +25,14 @@
     <div v-for="repost in reposts">
         <p>[[ repost.reposter ]] reposted:</p>
         <p>[[ repost.post ]]</p>
-        <p>Original poster: [[ repost.author ]] at: [[ repost.date ]]</p>
+        <p>Original poster: [[ repost.author ]] at: [[ formatDate(repost.date ]]</p>
         <hr>
     </div>
     <div v-for="quote in quotes">
         <p>[[ quote.quoter ]] quoted:</p>
         <p>[[ quote.quote ]]</p>
         <blockquote>[[ quote.post ]]</blockquote>
-        <p>Original poster: [[ quote.author ]] at: [[ quote.date ]]</p>
+        <p>Original poster: [[ quote.author ]] at: [[ formatDate(quote.date ]]</p>
         <hr>
     </div>
     <div id="create_post">
@@ -41,7 +41,7 @@
             <p>[[ validation ]]</p>
         </div>
         <form method="post" @submit.prevent="createPost($event)" enctype="multipart/form-data">
-            <input type="hidden" name="poster" value="1">
+            <input type="hidden" name="poster" :value="auth_user">
             <textarea name="content" cols="30" rows="10" placeholder="Create your post here" v-model.lazy="post_content"></textarea>
             <div>
                 <input type="submit" value="Post">
@@ -52,12 +52,10 @@
 <script src="{% static 'js/vue.global.js' %}"></script>
 <script>
 
-    // arbitrary logged in user
-    const auth_user = 5;
-
     Vue.createApp({
         data() {
           return {
+            auth_user: 1,
             validation: '',
             post_content: '',
             posts: [],
@@ -103,7 +101,7 @@
 
                 let data = new FormData();
                 data.append('post', id);
-                data.append('reposter', auth_user);
+                data.append('reposter', this.auth_user);
 
                 fetch('/api/repost/', {
                     method: 'POST',
@@ -121,15 +119,13 @@
             },
             quote(event){
 
-                console.log(event.target.getAttribute('name'))
-
                 const post = event.target.getAttribute('name').substring(5);
                 const quote = event.target.value;
 
                 let data = new FormData();
                 data.append('post', post);
                 data.append('quote', quote);
-                data.append('quoter', auth_user);
+                data.append('quoter', this.auth_user);
 
                 fetch('/api/quote/', {
                     method: 'POST',
@@ -149,7 +145,7 @@
             filter(){
                 
                 let data = new FormData();
-                data.append('user', auth_user);
+                data.append('user', this.auth_user);
                 
                 fetch('/api/home/',{
                     method: 'POST',
@@ -161,6 +157,11 @@
                     this.reposts = data.reposts
                     this.quotes = data.quotes
                 })           
+            },
+            formatDate(date) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                let fdate = new Date(date);
+                return fdate.toLocaleDateString('en',options);
             }
         },
         mounted() {
