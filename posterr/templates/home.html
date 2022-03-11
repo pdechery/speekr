@@ -7,9 +7,9 @@
     <title>Posterr - Home</title>
 </head>
 <body>
-<div id="app" style="width: 70%;">
+<div id="posterr" style="width: 70%;">
     <h1>Posterr</h1>
-    <p><a href="/">(Show everything)</a> | <a href="#" @click.prevent="filter">(Show only my content)</a></p>
+    <p><a href="/">All</a> | <a href="#" @click.prevent="filter">Following</a></p>
     <h2>Posts</h2>
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
@@ -17,7 +17,7 @@
         <div style="display: flex;">
             <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
             <div class="quote-form">
-                <textarea :name="['name-'+post.id]" cols="20" rows="3" placeholder="or Quote this post (press tab after typing to sumit)" @change.self="quote($event)"></textarea>
+                <textarea :name="['name-'+post.id]" cols="20" rows="3" placeholder="...or Quote this post (press tab after typing to submit)" @change.self="quote($event)"></textarea>
             </div>
         </div>
         <hr>
@@ -49,9 +49,12 @@
         </form>
     </div>
 </div>
-<!-- <script src="https://unpkg.com/vue@3"></script> -->
 <script src="{% static 'js/vue.global.js' %}"></script>
 <script>
+
+    // arbitrary logged in user
+    const auth_user = 5;
+
     Vue.createApp({
         data() {
           return {
@@ -76,7 +79,9 @@
                 let data = new FormData();
 
                 data.append('content', this.post_content);
-                data.append('poster', event.srcElement[0]._value);
+                
+                // textarea value
+                data.append('poster', event.target[0].value);
 
                 fetch('/api/posts/',{
                     method:'POST',
@@ -87,7 +92,8 @@
                     this.posts.unshift({
                         'content': data.content,
                         'poster': data.poster,
-                        'date': data.date
+                        'date': data.date,
+                        'id': data.id
                     })
                 })
 
@@ -97,7 +103,7 @@
 
                 let data = new FormData();
                 data.append('post', id);
-                data.append('reposter', 4); // arbitrary user
+                data.append('reposter', auth_user);
 
                 fetch('/api/repost/', {
                     method: 'POST',
@@ -115,13 +121,15 @@
             },
             quote(event){
 
+                console.log(event.target.getAttribute('name'))
+
                 const post = event.target.getAttribute('name').substring(5);
                 const quote = event.target.value;
 
                 let data = new FormData();
                 data.append('post', post);
                 data.append('quote', quote);
-                data.append('quoter', 4); // arbitrary user
+                data.append('quoter', auth_user);
 
                 fetch('/api/quote/', {
                     method: 'POST',
@@ -133,14 +141,15 @@
                         'quoter': data.quoter,
                         'quote': data.quote,
                         'date': data.date,
-                        'post': data.post
+                        'post': data.post,
+                        'author': data.author,
                     })
                 })
             },
             filter(){
                 
                 let data = new FormData();
-                data.append('user', 4); // arbitrary user
+                data.append('user', auth_user);
                 
                 fetch('/api/home/',{
                     method: 'POST',
@@ -163,7 +172,7 @@
                     this.quotes = data.quotes
                 })
         }
-      }).mount('#app')
+      }).mount('#posterr')
 </script>
 </body>
 </html>

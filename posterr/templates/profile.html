@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,24 +7,70 @@
     <title>Posterr - Profile</title>
 </head>
 <body>
-<div id="app">
+<div id="posterr">
     <h1>Posterr</h1>
-    <h2>[[ user.name ]] profile</h2>
-    <h4><a href="#">Follow ou Unfollow, vamos fazer um post via formulario ou get sei la</a></h4>
-    <h4>Following: [[ user.followers ]]</h4>
-    <h4>Followers: [[ user.following ]]</h4>
-    <div v-for="post in posts">
-        [[ post.content ]]
+    
+    <div style="display: flex; align-items: center;">
+        <p style="margin: 0 1em 0 0;"><strong>[[ user.name ]]'s ([[ user.username ]]) profile</strong></p>
+        <div v-if="user.following">
+            <button @click="unfollow">Unfollow</button>
+        </div>
+        <div v-else>
+            <button @click="follow">follow</button>
+        </div>
     </div>
-    <div>
-        <h3>Formulario para criar post</h3>
+    
+    <p>Following: [[ user.followers ]] | Followers: [[ user.following ]]</p>
+    
+    <h2>Posts</h2>
+    
+    <div v-for="post in posts">
+        <p>[[ post.content ]]</p>
+        <p>From: [[ post.poster ]] at: [[ post.date ]]</p>
+        <div style="display: flex;">
+            <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
+            <div class="quote-form">
+                <textarea :name="['name-'+post.id]" cols="20" rows="3" placeholder="...or Quote this post (press tab after typing to submit)" @change.self="quote($event)"></textarea>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div v-for="repost in reposts">
+        <p>[[ repost.reposter ]] reposted:</p>
+        <p>[[ repost.post ]]</p>
+        <p>Original poster: [[ repost.author ]] at: [[ repost.date ]]</p>
+        <hr>
+    </div>
+    <div v-for="quote in quotes">
+        <p>[[ quote.quoter ]] quoted:</p>
+        <p>[[ quote.quote ]]</p>
+        <blockquote>[[ quote.post ]]</blockquote>
+        <p>Original poster: [[ quote.author ]] at: [[ quote.date ]]</p>
+        <hr>
+    </div>
+    <div id="create_post">
+        <h2>Create Post</h2>
+        <div id="validation">
+            <p>[[ validation ]]</p>
+        </div>
+        <form method="post" @submit.prevent="createPost($event)" enctype="multipart/form-data">
+            <input type="hidden" name="poster" value="1">
+            <textarea name="content" cols="30" rows="10" placeholder="Create your post here" v-model.lazy="post_content"></textarea>
+            <div>
+                <input type="submit" value="Post">
+            </div>
+        </form>
     </div>
 </div>
-<script src="https://unpkg.com/vue@3"></script>
+<script src="{% static 'js/vue.global.js' %}"></script>
 <script>
     
-    let userId = window.location.pathname;
-    userId = userId.charAt(userId.length-1)
+    // profile owner. I'm getting his/her id by the page URL
+    let profile_user = window.location.pathname;
+    profile_user = profile_user.charAt(profile_user.length-1);
+
+    // arbitrary logged in user
+    const auth_user = 5;
 
     Vue.createApp({
         data() {
@@ -30,24 +78,39 @@
             user: {
                 name:'',
                 followers: '',
-                following: ''
+                following: false
             },
-            posts: '',
+            posts: [],
+            reposts: [],
+            quotes: []
           }
         },
         delimiters: ["[[", "]]"],
+        methods: {
+            isFollower() {
+                // make query to check if auth_user follows profile_user
+            },
+            follow() {
+                // create follow relationship between auth_user and profile_user
+            },
+            unfollow() {
+                // remove relationship between auth_user and profile_user
+            }
+        },
         mounted() {
-            fetch(`http://127.0.0.1:8000/api/profile/${userId}`,{})
+            fetch(`/api/profile/${userId}`,{})
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 this.user.name = data.user.name;
+                this.user.username = data.user.username;
                 this.user.followers = data.followers;
                 this.user.following = data.following;
                 this.posts = data.posts;
+                this.reposts = data.reposts
+                this.quotes = data.quotes
             })
         }
-      }).mount('#app')
+      }).mount('#posterr')
 </script>
 </body>
 </html>
