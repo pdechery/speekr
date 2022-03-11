@@ -29,6 +29,8 @@
     <p>Joined [[ formatDate(profile.creation_date) ]]</p>
     
     <p>Following: [[ profile.following ]] | Followers: [[ profile.followers ]]</p>
+
+    <p>Posts: [[ total ]]</p>
     
     <h2>Posts</h2>
     
@@ -93,6 +95,11 @@
           }
         },
         delimiters: ["[[", "]]"],
+        computed: {
+            total() {
+                return this.posts.length + this.reposts.length + this.quotes.length;
+            }
+        },
         methods: {
             createPost(event) {
                 
@@ -219,8 +226,6 @@
             // profile owner. I'm getting his/her id by the page URL
             const profile_user = window.location.pathname;
             this.profile_user = profile_user.charAt(profile_user.length-1);
-
-            console.log(this.profile_user)
 
             fetch(`/api/profile/${this.profile_user}`,{})
                 .then(response => response.json())

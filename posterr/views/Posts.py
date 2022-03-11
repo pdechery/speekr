@@ -21,8 +21,7 @@ class PostCreate(APIView):
     '''
     today = datetime.today()
 
-    # todays_posts = Post.objects.filter(poster=user_id).filter(date__day=today.day)
-    todays_posts = Post.objects.filter(poster=user_id).filter(date__hour=today.hour)
+    todays_posts = Post.objects.filter(poster=user_id).filter(date__day=today.day)
 
     if todays_posts.count() >= 5:
       return False

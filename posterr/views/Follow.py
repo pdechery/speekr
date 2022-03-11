@@ -38,9 +38,6 @@ def doFollow(request):
     If a specific field exists the relationship will be deleted
   '''
 
-  print('doFollow')
-  print(request.data)
-
   user1 = request.data['user1']
   user2 = request.data['user2']
   
