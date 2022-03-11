@@ -48,7 +48,7 @@
     "model": "posterr.post",
     "pk": 8,
     "fields": {
-      "poster": 9,
+      "poster": 7,
       "content": "é nós",
       "date": "2022-03-07"
     }

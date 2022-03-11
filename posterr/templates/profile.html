@@ -11,7 +11,9 @@
     <h1>Posterr</h1>
     
     <div style="display: flex; align-items: center;">
-        <p style="margin: 0 1em 0 0;"><strong>[[ profile.name ]]'s ([[ profile.username ]]) profile</strong></p>
+        <p style="margin: 0 1em 0 0;">
+            <strong>[[ profile.name ]]'s ([[ profile.username ]]) profile</strong><br>
+        </p>
         <div v-if="">
             <div v-if="show_follow_button">
                 <div v-if="auth_user_follows">
@@ -23,8 +25,10 @@
             </div>
         </div>
     </div>
+
+    <p>Joined [[ formatDate(profile.creation_date) ]]</p>
     
-    <p>Following: [[ profile.followers ]] | Followers: [[ profile.following ]]</p>
+    <p>Following: [[ profile.following ]] | Followers: [[ profile.followers ]]</p>
     
     <h2>Posts</h2>
     
@@ -73,11 +77,13 @@
         data() {
           return {
             profile_user: '',
-            auth_user: 1,
+            auth_user: 5,
             show_follow_button: true,
             auth_user_follows: false,
             profile: {
                 name:'',
+                username: '',
+                creation_date: '',
                 followers: '',
                 following: ''
             },
@@ -214,14 +220,18 @@
             const profile_user = window.location.pathname;
             this.profile_user = profile_user.charAt(profile_user.length-1);
 
+            console.log(this.profile_user)
+
             fetch(`/api/profile/${this.profile_user}`,{})
                 .then(response => response.json())
                 .then(data => {
                     
                     this.profile.name = data.user.name;
                     this.profile.username = data.user.username;
-                    this.profile.followers = data.followers;
+                    this.profile.creation_date = data.user.creation_date;
+                    this.profile.name = data.user.name;
                     this.profile.following = data.following;
+                    this.profile.followers = data.followers;
                     this.posts = data.posts;
                     this.reposts = data.reposts;
                     this.quotes = data.quotes;

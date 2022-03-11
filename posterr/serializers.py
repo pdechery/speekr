@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = User
-    fields = ['name','follows','username']
+    fields = ['name','follows','username','creation_date']
 
 
 # Post

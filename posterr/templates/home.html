@@ -13,7 +13,7 @@
     <h2>Posts</h2>
     <div v-for="post in posts">
         <p>[[ post.content ]]</p>
-        <p>From: [[ post.poster ]] at: [[ formatDate(post.date ]]</p>
+        <p>From: [[ post.poster ]] at: [[ formatDate(post.date) ]]</p>
         <div style="display: flex;">
             <div style="margin-right: 1em;"><a href="#" @click.prevent="repost(post.id)">Repost</a></div>
             <div class="quote-form">
@@ -25,14 +25,14 @@
     <div v-for="repost in reposts">
         <p>[[ repost.reposter ]] reposted:</p>
         <p>[[ repost.post ]]</p>
-        <p>Original poster: [[ repost.author ]] at: [[ formatDate(repost.date ]]</p>
+        <p>Original poster: [[ repost.author ]] at: [[ formatDate(repost.date) ]]</p>
         <hr>
     </div>
     <div v-for="quote in quotes">
         <p>[[ quote.quoter ]] quoted:</p>
         <p>[[ quote.quote ]]</p>
         <blockquote>[[ quote.post ]]</blockquote>
-        <p>Original poster: [[ quote.author ]] at: [[ formatDate(quote.date ]]</p>
+        <p>Original poster: [[ quote.author ]] at: [[ formatDate(quote.date) ]]</p>
         <hr>
     </div>
     <div id="create_post">
@@ -161,7 +161,7 @@
             formatDate(date) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
                 let fdate = new Date(date);
-                return fdate.toLocaleDateString('en',options);
+                return fdate.toLocaleDateString('en', options);
             }
         },
         mounted() {
