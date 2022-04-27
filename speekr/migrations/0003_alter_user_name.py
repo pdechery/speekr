@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posterr', '0002_alter_quote_quoter_alter_repost_reposter'),
+        ('speekr', '0002_alter_quote_quoter_alter_repost_reposter'),
     ]
 
     operations = [

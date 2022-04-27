@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 
-from posterr.models import User
+from speekr.models import User
 
 @api_view(['GET'])
 def isFollowing(request, user1, user2):

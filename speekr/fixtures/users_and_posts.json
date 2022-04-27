@@ -1,6 +1,6 @@
 [
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 1,
     "fields": {
       "name": "Antonio Souza",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 2,
     "fields": {
       "name": "Joana Maria",
@@ -18,7 +18,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 3,
     "fields": {
       "name": "Pedro Martins",
@@ -27,7 +27,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 4,
     "fields": {
       "name": "Maria Souza",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 5,
     "fields": {
       "name": "Carlos Benfica",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 6,
     "fields": {
       "name": "Marcos Oliveira",
@@ -54,7 +54,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 7,
     "fields": {
       "name": "Mariana Baltazar",
@@ -63,7 +63,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 8,
     "fields": {
       "name": "Rita de Castro",
@@ -72,7 +72,7 @@
     }
   },
   {
-    "model": "posterr.user",
+    "model": "speekr.user",
     "pk": 9,
     "fields": {
       "name": "Ana Gouvea",
@@ -81,7 +81,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 1,
     "fields": {
       "poster": 1,
@@ -90,7 +90,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 2,
     "fields": {
       "poster": 2,
@@ -99,7 +99,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 3,
     "fields": {
       "poster": 3,
@@ -108,7 +108,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 4,
     "fields": {
       "poster": 4,
@@ -117,7 +117,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 5,
     "fields": {
       "poster": 5,
@@ -126,7 +126,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 6,
     "fields": {
       "poster": 6,
@@ -135,7 +135,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 7,
     "fields": {
       "poster": 7,
@@ -144,7 +144,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 8,
     "fields": {
       "poster": 8,
@@ -153,7 +153,7 @@
     }
   },
   {
-    "model": "posterr.post",
+    "model": "speekr.post",
     "pk": 9,
     "fields": {
       "poster": 9,

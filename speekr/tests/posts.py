@@ -1,5 +1,5 @@
 from django.test import TestCase
-from posterr.models import Post, User
+from speekr.models import Post, User
 
 
 class PostTest(TestCase):

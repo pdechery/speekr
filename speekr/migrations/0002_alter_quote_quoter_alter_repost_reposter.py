@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posterr', '0001_initial'),
+        ('speekr', '0001_initial'),
     ]
 
     operations = [

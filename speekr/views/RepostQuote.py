@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from posterr.models import User, Post
-from posterr.serializers import RepostSerializer, QuoteSerializer
+from speekr.models import User, Post
+from speekr.serializers import RepostSerializer, QuoteSerializer
 
 
 class RepostCreate(APIView):

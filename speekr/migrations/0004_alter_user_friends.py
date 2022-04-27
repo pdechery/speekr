@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posterr', '0003_alter_user_name'),
+        ('speekr', '0003_alter_user_name'),
     ]
 
     operations = [

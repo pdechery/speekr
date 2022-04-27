@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from posterr.models import User, Post, Repost, Quote
+from speekr.models import User, Post, Repost, Quote
 
 # User
 

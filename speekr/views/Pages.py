@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from posterr.models import User, Post, Repost, Quote
-from posterr.serializers import UserSerializer, PostSerializer, RepostSerializer, QuoteSerializer
+from speekr.models import User, Post, Repost, Quote
+from speekr.serializers import UserSerializer, PostSerializer, RepostSerializer, QuoteSerializer
 
 # HTML templates
 

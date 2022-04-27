@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from posterr.models import User, Post
-from posterr.serializers import PostSerializer
+from speekr.models import User, Post
+from speekr.serializers import PostSerializer
 
 
 class PostCreate(APIView):
