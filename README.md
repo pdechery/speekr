@@ -1,6 +1,6 @@
 # Speekr
 
-This is an experimental rudimentary Twitter app. It's possible to write posts, follow other users and repost and/or comment their posts.
+This is an experimental rudimentary Twitter-like app. It's possible to write posts, follow other users and repost and/or comment their posts.
 
 I'd built this with the following tools:
 
