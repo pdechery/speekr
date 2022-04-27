@@ -1,8 +1,8 @@
 # Speekr
 
-This is a rudimentary Twitter app. It's possible to write posts, follow other users and repost and/or comment their posts.
+This is an experimental rudimentary Twitter app. It's possible to write posts, follow other users and repost and/or comment their posts.
 
-I build this with the following tools:
+I'd built this with the following tools:
 
 - Django 4.0
 - Django Rest Framework 3.13
