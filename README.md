@@ -1,5 +1,16 @@
 # Speekr
 
+This is a rudimentary Twitter app. It's possible to write posts, follow other users and repost and/or comment their posts.
+
+I build this with the following tools:
+
+- Django 4.0
+- Django Rest Framework 3.13
+- Vue.js
+- Sqlite
+
+I'm currently working in this project trying to add a better interface between other improvements.
+
 ### Build Steps  
 
 This app is built with Django Framework, version 4, and uses the Django Rest package to support the REST API.
